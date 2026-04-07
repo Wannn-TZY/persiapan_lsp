@@ -17,7 +17,7 @@ class LoginController extends Controller
         $walas = Walas::where('nig', $request->txt_nig)->first();
 
         if(!$walas || !Hash::check($request->txt_password, $walas->password)){
-            return back()->with('loginError', 'Login Gagal! Periksa NIG dan Password Anda');
+            return back()->with('loginError', 'Email atau password salah');
         }
 
         $kelas = Kelas::where('id', $walas->kelas_id)->first();
@@ -35,7 +35,7 @@ class LoginController extends Controller
         $siswa = Siswa::where('nis', $request->txt_nis)->first();
 
         if(!$siswa || !Hash::check($request->txt_password, $siswa->password)){
-            return back()->with('loginError', 'Login Gagal! Periksa NIS dan Password Anda');
+            return back()->with('loginError', 'Email atau password salah');
         }
 
         $kelas = Kelas::where('id', $siswa->kelas_id)->first();
@@ -47,8 +47,18 @@ class LoginController extends Controller
             'kelas_id' => $kelas->kelas_id,
             'nama_kelas' => $kelas ? $kelas->nama_kelas : 'kelas belum ditentukan'
         ]);
-        return redirect('nilai-rapot/show');
+        return redirect('/dashboard');
     }
+
+    public function dashboard()
+    {
+        if (!session()->has('role')) {
+            return redirect('/');
+        }
+
+        return view('dashboard');
+    }
+
     public function logout(){
         session()->flush();
         return redirect('/');

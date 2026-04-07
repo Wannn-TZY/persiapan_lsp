@@ -46,15 +46,12 @@ public function store(Request $request)
 {
     $data_nilai = $request->validate([
         'siswa_id'   => ['required'],
-        'matematika' => ['required'],
-        'indonesia'  => ['required'],
-        'inggris'    => ['required'],
-        'kejuruan'   => ['required'],
-        'pilihan'    => ['required'],
+        'matematika' => ['required','numeric','min:0','max:100'],
+        'indonesia'  => ['required','numeric','min:0','max:100'],
+        'inggris'    => ['required','numeric','min:0','max:100'],
+        'kejuruan'   => ['required','numeric','min:0','max:100'],
+        'pilihan'    => ['required','numeric','min:0','max:100'],
     ]);
-
-    $data_nilai['walas_id']  = session('id');
-    $data_nilai['siswa_id']  = $request->siswa_id;
     $data_nilai['rata_rata'] = round((
         $data_nilai['matematika'] +
         $data_nilai['indonesia'] +
@@ -83,11 +80,11 @@ public function edit(Nilai $nilai){
 
 public function update(Request $request, Nilai $nilai) {
     $data_nilai = $request->validate([
-        'matematika' => ['required'],
-        'indonesia'  => ['required'],
-        'inggris'    => ['required'],
-        'kejuruan'   => ['required'],
-        'pilihan'    => ['required'],
+        'matematika' => ['required','numeric','min:0','max:100'],
+        'indonesia'  => ['required','numeric','min:0','max:100'],
+        'inggris'    => ['required','numeric','min:0','max:100'],
+        'kejuruan'   => ['required','numeric','min:0','max:100'],
+        'pilihan'    => ['required','numeric','min:0','max:100'],
     ]);
 
     $data_nilai['walas_id'] = session('id');
@@ -159,11 +156,16 @@ public function gradeMapel($nilai){
 }
 public function show(){
     $siswa = Siswa::with(['kelas','nilai'])->find(session('id'));
-    $nilai = optional($siswa->nilai)->first();
+    $nilai = $siswa->nilai;
     if (!$nilai){
-        return redirect()->back()->with('error', 'nilai lu ga ada coy');
+        return view('nilai.show', [
+            'siswa' => $siswa,
+            'data_nilai' => null,
+            'walas' => null,
+            'message' => 'Data nilai anda tidak ditemukan atau belum diisi',
+        ]);
     }
-    $walas =Nilai::with('walas')->first();
+    $walas = Nilai::with('walas')->where('id', $nilai->id)->first();
     $data_nilai = [
         'matematika' => [
             'nilai' => $nilai->matematika ?? 'Data tidak tersedia',
@@ -193,7 +195,8 @@ public function show(){
      return view('nilai.show',[
         'siswa'=>$siswa,
         'data_nilai'=>$data_nilai,
-        'walas'=>$walas
+        'walas'=>$walas,
+        'message' => null,
      ]);
 }
 public function destroy(Nilai $nilai){

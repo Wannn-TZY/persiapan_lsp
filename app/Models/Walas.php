@@ -10,7 +10,7 @@ class Walas extends Model
     use HasFactory;
     protected $table = 'walas';
     protected $guarded = ['id'];
-    protected $filllable = ['nig','password','nama_walas'];
+    protected $fillable = ['nig','password','nama_walas'];
     protected $hidden = ['password'];
 
     public function kelas() {

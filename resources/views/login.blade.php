@@ -22,7 +22,9 @@
 
             <div id = "Student" class = "tabcontent" style = "display: block;">
                 <h2>Login Siswa</h2>
-                <h3>{{ session('error') }}</h3>
+                @if(session('loginError'))
+                    <h3 style="color:red">{{ session('loginError') }}</h3>
+                @endif
                 <form action = "/login-siswa" method = "POST">
                     @csrf
                     <label>NIS</label>
@@ -36,7 +38,9 @@
             </div>
             <div id = "Teacher" class = "tabcontent" style = "display:none;">
                 <h2>Login Guru</h2>
-                <h3>{{ session('error') }}</h3>
+                @if(session('loginError'))
+                    <h3 style="color:red">{{ session('loginError') }}</h3>
+                @endif
                 <form action = "/login-walas" method = "POST">
                     @csrf
                     <label>NIG</label>
