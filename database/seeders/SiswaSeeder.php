@@ -13,7 +13,7 @@ class SiswaSeeder extends Seeder
      */
     public function run(): void
     {
-         $data = [
+        $data = [
             ['nis' => '112',
             'nama_siswa' => 'Arya',
             'kelas_id' => 1,
